@@ -22,7 +22,7 @@ public class MainCrawler
         static void CrawlInstitution()
         {
             Console.WriteLine($"========== CrawlInstitution ==========");
-            Queue<DateTime> error = Extention.LoadJson<Queue<DateTime>>(FilePath.PathRoot, FilePath.NameInstitutionUpdateTime) ?? new();
+            Queue<DateTime> error = Extention.LoadJson<Queue<DateTime>>(FilePath.PathRoot, FilePath.NameInstitutionError) ?? new();
 
             DateTime? beginInstitution = Extention.LoadJson<DateTime?>(FilePath.PathRoot, FilePath.NameInstitutionUpdateTime);
             if (beginInstitution != null) beginInstitution = beginInstitution.Value.AddDays(1);
@@ -38,6 +38,7 @@ public class MainCrawler
             {
                 PriceCrawler.CrawlDate(errorPrice.Dequeue(), error);
                 Thread.Sleep(2500);
+                errorPrice.SaveJson(FilePath.PathRoot, FilePath.NamePriceError);
             }
             Console.WriteLine($"========== Error ==========");
             Console.WriteLine($"   - Error Count:{error.Count()}");
@@ -48,11 +49,12 @@ public class MainCrawler
         {
             Console.WriteLine($"========== ReCrawlInstitution ==========");
             Queue<DateTime> error = new();
-            Queue<DateTime> errorInstitutionError = Extention.LoadJson<Queue<DateTime>>(FilePath.PathRoot, FilePath.NameInstitutionUpdateTime) ?? new();
+            Queue<DateTime> errorInstitutionError = Extention.LoadJson<Queue<DateTime>>(FilePath.PathRoot, FilePath.NameInstitutionError) ?? new();
             while (errorInstitutionError.Any())
             {
                 PriceCrawler.CrawlDate(errorInstitutionError.Dequeue(), error);
                 Thread.Sleep(2500);
+                errorInstitutionError.SaveJson(FilePath.PathRoot, FilePath.NameInstitutionError);
             }
             Console.WriteLine($"========== Error ==========");
             Console.WriteLine($"   - Error Count:{error.Count()}");
