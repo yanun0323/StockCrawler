@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace StockCrawler.Crawler;
@@ -21,7 +22,9 @@ public class InstitutionCrawler
             Console.WriteLine($"=========={target:yyyy/MM/dd}==========");
             string url = $"https://www.twse.com.tw/fund/T86?response=json&date=" + $"{target:yyyyMMdd}" + "&selectType=ALL";
             Console.WriteLine($"   - Send request: " + url);
-            WebsiteData = HttpClientJsonExtensions.GetFromJsonAsync<InstitutionCrawler?>(client, url).Result;
+            string json = client.GetStringAsync(url).Result;
+            WebsiteData = JsonSerializer.Deserialize<InstitutionCrawler?>(json);
+
             if (WebsiteData == null || WebsiteData.date == "" || !WebsiteData.data.Any())
             {
                 Console.WriteLine($"   - No Data");

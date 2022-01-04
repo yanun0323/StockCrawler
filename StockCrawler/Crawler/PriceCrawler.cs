@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace StockCrawler.Crawler;
@@ -21,7 +22,8 @@ public class PriceCrawler
             Console.WriteLine($"=========={target:yyyy/MM/dd}==========");
             string url = $"https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=" + $"{ target:yyyyMMdd}" + "&type=ALLBUT0999";
             Console.WriteLine($"   - Send request: " + url);
-            WebsiteData = HttpClientJsonExtensions.GetFromJsonAsync<PriceCrawler?>(client, url).Result;
+            string json = client.GetStringAsync(url).Result;
+            WebsiteData = JsonSerializer.Deserialize<PriceCrawler?>(json);
 
             if (WebsiteData == null || WebsiteData.date == "" || (!WebsiteData.data8.Any() && !WebsiteData.data9.Any()))
             {
