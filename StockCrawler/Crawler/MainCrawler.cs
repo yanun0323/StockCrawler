@@ -38,6 +38,7 @@ public class MainCrawler
             {
                 PriceCrawler.CrawlDate(errorPrice.Dequeue(), error);
                 Thread.Sleep(2500);
+                errorPrice.SaveJson(FilePath.PathRoot, FilePath.NamePriceError);
             }
             Console.WriteLine($"========== Error ==========");
             Console.WriteLine($"   - Error Count:{error.Count()}");
@@ -53,6 +54,7 @@ public class MainCrawler
             {
                 PriceCrawler.CrawlDate(errorInstitutionError.Dequeue(), error);
                 Thread.Sleep(2500);
+                errorInstitutionError.SaveJson(FilePath.PathRoot, FilePath.NameInstitutionError);
             }
             Console.WriteLine($"========== Error ==========");
             Console.WriteLine($"   - Error Count:{error.Count()}");
