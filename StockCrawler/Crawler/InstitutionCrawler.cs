@@ -22,7 +22,6 @@ public class InstitutionCrawler
             string url = $"https://www.twse.com.tw/fund/T86?response=json&date=" + $"{target:yyyyMMdd}" + "&selectType=ALL";
             Console.WriteLine($"   - Send request: " + url);
             WebsiteData = HttpClientJsonExtensions.GetFromJsonAsync<InstitutionCrawler?>(client, url).Result;
-            Console.WriteLine($"   - Request done");
             if (WebsiteData == null || WebsiteData.date == "" || !WebsiteData.data.Any())
             {
                 Console.WriteLine($"   - No Data");

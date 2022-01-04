@@ -4,10 +4,10 @@ public class MainCrawler
     public static void Run()
     {
         CrawlPrice();
-        //CrawlInstitution();
+        CrawlInstitution();
 
-        //ReCrawlPrice();
-        //ReCrawlInstitution();
+        ReCrawlPrice();
+        ReCrawlInstitution();
 
 
         static void CrawlPrice()
@@ -17,8 +17,7 @@ public class MainCrawler
 
             DateTime? beginPrice = Extention.LoadJson<DateTime?>(FilePath.PathRoot, FilePath.NamePriceUpdateTime);
             if(beginPrice != null) beginPrice = beginPrice.Value.AddDays(1);
-            //PriceCrawler.Crawl(begin: beginPrice, end: new(2012, 5, 2), error);
-            PriceCrawler.Crawl(error, begin: new(2006, 12, 1), end: new(2012, 5, 2));
+            PriceCrawler.Crawl(error, begin: beginPrice);
         }
         static void CrawlInstitution()
         {
