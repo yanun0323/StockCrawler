@@ -1,2 +1,4 @@
 ﻿
-Console.WriteLine("Hello, World!");
+using StockCrawler.Crawler;
+
+MainCrawler.Run();

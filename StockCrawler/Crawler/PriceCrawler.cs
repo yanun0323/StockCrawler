@@ -1,33 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
-namespace StockCrawler;
+namespace StockCrawler.Crawler;
 public class PriceCrawler
 {
+    [JsonIgnore]
     private static readonly HttpClient client = new HttpClient();
-    public List<List<string>>? data8 { get; set; }
-    public List<List<string>>? data9 { get; set; }
-    public List<string>? fields9 { get; set; }
+    public string date { get; set; } = "";
+    public List<List<string>> data8 { get; set; } = new();
+    public List<List<string>> data9 { get; set; } = new();
+    public List<string> fields9 { get; set; } = new();
 
-    public static PriceCrawler? Crawl(DateTime target)
+    public static void CrawlDate(DateTime target, Queue<DateTime> error)
     {
-        PriceCrawler? crawler;
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        PriceCrawler? WebsiteData;
         try
         {
+            Console.WriteLine($"=========={target:yyyy/MM/dd}==========");
             string url = $"https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=" + $"{ target:yyyyMMdd}" + "&type=ALLBUT0999";
-            Trace.WriteLine($"   - Send request: " + url);
-            crawler = HttpClientJsonExtensions.GetFromJsonAsync<PriceCrawler?>(client, url).Result;
+            Console.WriteLine($"   - Send request: " + url);
+            WebsiteData = HttpClientJsonExtensions.GetFromJsonAsync<PriceCrawler?>(client, url).Result;
+
+            if (WebsiteData == null || WebsiteData.date == "" || (!WebsiteData.data8.Any() && !WebsiteData.data9.Any()))
+            {
+                Console.WriteLine($"   - No Data");
+                Console.WriteLine($"   - 沒有資料: {target:yyyy/MM/dd}");
+            }
+            else
+            {
+                string pathToSave = Path.Combine(FilePath.PathPrice, WebsiteData.date.Remove(4));
+                WebsiteData.SaveJson(pathToSave, WebsiteData.date);
+                Console.WriteLine($"   - Data Saved!");
+            }
         }
         catch (Exception)
         {
-            Trace.WriteLine($"   [Error] Can't load website {target:yyyy/MM/dd}");
-            return null;
+            Console.WriteLine($"   - Error!!!");
+            error.Enqueue(target);
+            error.SaveJson(FilePath.PathRoot, FilePath.NamePriceError);
+            Console.WriteLine($"   - Error Saved!");
+            Trace.WriteLine($"   [Error] Can't catch data on {target:yyyy/MM/dd}");
         }
-        return crawler;
+    }
+    public static void Crawl(Queue<DateTime> error, DateTime? begin = null, DateTime? end = null)
+    {
+        DateTime target = begin ?? new(2004, 2, 13);
+        DateTime now = end ?? DateTime.Now;
+
+        while (target.AddHours(14) < now)
+        {
+            CrawlDate(target, error);
+            target.SaveJson(FilePath.PathRoot, FilePath.NamePriceUpdateTime);
+
+            Thread.Sleep(2500);
+            target = target.AddDays(1);
+        }
+        Console.WriteLine($"========== Error ==========");
+        Console.WriteLine($"   - Error Count:{error.Count()}");
+        error.SaveJson(FilePath.PathRoot, FilePath.NamePriceError);
+        Console.WriteLine($"   - Error Saved!");
     }
 }
