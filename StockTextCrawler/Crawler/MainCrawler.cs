@@ -1,4 +1,4 @@
-﻿namespace StockCrawler.Crawler;
+﻿namespace StockTextCrawler.Crawler;
 public class MainCrawler
 {
     public static void Run()

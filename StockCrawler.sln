@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockCrawler", "StockCrawler\StockCrawler.csproj", "{3DC7C698-AC96-4866-B0C5-6A2CCD7A17A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockCrawler", "StockCrawler\StockCrawler.csproj", "{3DC7C698-AC96-4866-B0C5-6A2CCD7A17A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTextCrawler", "StockTextCrawler\StockTextCrawler.csproj", "{EC35909C-E665-49A9-A0C8-CBD6550C8ADE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3DC7C698-AC96-4866-B0C5-6A2CCD7A17A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DC7C698-AC96-4866-B0C5-6A2CCD7A17A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DC7C698-AC96-4866-B0C5-6A2CCD7A17A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC35909C-E665-49A9-A0C8-CBD6550C8ADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC35909C-E665-49A9-A0C8-CBD6550C8ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC35909C-E665-49A9-A0C8-CBD6550C8ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC35909C-E665-49A9-A0C8-CBD6550C8ADE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
