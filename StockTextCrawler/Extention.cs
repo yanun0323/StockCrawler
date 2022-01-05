@@ -30,7 +30,7 @@ public static class Extention
             return default;
         try
         {
-            using StreamReader streamReader = new(Path.Combine(path, filename), Encoding.UTF8);
+            using StreamReader streamReader = new(Path.Combine(path, filename), Encoding.Default);
             if (streamReader == null)
                 return default;
             string? line = streamReader.ReadLine();
@@ -53,7 +53,7 @@ public static class Extention
         if (!Directory.Exists(path))
             _ = Directory.CreateDirectory(path);
 
-        using StreamWriter streamWriter = new(Path.Combine(path, filename), false, Encoding.UTF8);
+        using StreamWriter streamWriter = new(Path.Combine(path, filename), false, Encoding.Default);
         streamWriter.WriteLine(JsonSerializer.Serialize(obj, options));
         streamWriter.Flush();
         streamWriter.Close();
@@ -67,7 +67,7 @@ public static class Extention
             return null;
         try
         {
-            using StreamReader streamReader = new(Path.Combine(path, filename), Encoding.UTF8);
+            using StreamReader streamReader = new(Path.Combine(path, filename), Encoding.Default);
             if (streamReader == null)
                 return null;
             string? line = streamReader.ReadLine();
@@ -87,8 +87,8 @@ public static class Extention
         if (!Directory.Exists(path))
             _ = Directory.CreateDirectory(path);
 
-        using StreamWriter streamWriter = new(Path.Combine(path, filename), false, Encoding.UTF8);
-        streamWriter.Write(content);
+        using StreamWriter streamWriter = new(Path.Combine(path, filename), false, Encoding.Default);
+        streamWriter.WriteLine(content);
         streamWriter.Flush();
         streamWriter.Close();
     }
