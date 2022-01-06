@@ -1,12 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace StockTextCrawler.Crawler;
 public static class PriceCrawler
 {
-    [JsonIgnore]
     private static readonly HttpClient client = new HttpClient();
 
     public static void CrawlDate(DateTime target, Queue<DateTime> error)
@@ -20,26 +16,27 @@ public static class PriceCrawler
 
             string? content = client.GetStringAsync(url).Result;
 
-            if (content == null )
+            if (content == null)
             {
-                Console.WriteLine($"   - Error!!!");
-                error.Enqueue(target);
-                error.SaveJson(FilePath.Path_Raw_Root, FilePath.Name_Error_Price);
-                Console.WriteLine($"   - Error Saved!");
-                Trace.WriteLine($"   [Error] Can't catch data on {target:yyyy/MM/dd}");
+                RefreshError(target, error);
+                SaveError(error);
             }
             else
             {
-                content.SaveText(FilePath.Path_Raw_Price, $"{target:yyyyMMdd}");
+                content.SaveText(CrawlerPath.Path_Raw_Price, $"{target:yyyyMMdd}");
                 Console.WriteLine($"   - Data Saved!");
             }
         }
         catch (Exception)
         {
+            RefreshError(target, error);
+            SaveError(error);
+        }
+
+        static void RefreshError(DateTime target, Queue<DateTime> error)
+        {
             Console.WriteLine($"   - Error!!!");
             error.Enqueue(target);
-            error.SaveJson(FilePath.Path_Raw_Root, FilePath.Name_Error_Price);
-            Console.WriteLine($"   - Error Saved!");
             Trace.WriteLine($"   [Error] Can't catch data on {target:yyyy/MM/dd}");
         }
     }
@@ -51,14 +48,20 @@ public static class PriceCrawler
         while (target.AddHours(14) < now)
         {
             CrawlDate(target, error);
-            target.SaveJson(FilePath.Path_Raw_Root, FilePath.Name_UpdateTime_Price);
+            target.SaveJson(CrawlerPath.Path_Raw_Root, CrawlerPath.Name_UpdateTime_Price);
 
             Thread.Sleep(2500);
             target = target.AddDays(1);
         }
+
         Console.WriteLine($"========== Error ==========");
         Console.WriteLine($"   - Error Count:{error.Count()}");
-        error.SaveJson(FilePath.Path_Raw_Root, FilePath.Name_Error_Price);
+
+        SaveError(error); ;
+    }
+    private static void SaveError(Queue<DateTime> error)
+    {
+        error.SaveJson(CrawlerPath.Path_Raw_Root, CrawlerPath.Name_Error_Price);
         Console.WriteLine($"   - Error Saved!");
     }
 }

@@ -1,13 +1,9 @@
 ﻿using System.Diagnostics;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace StockTextCrawler.Crawler;
 
 public static class InstitutionCrawler
 {
-    [JsonIgnore]
     private static readonly HttpClient client = new();
 
     public static void CrawlDate(DateTime target, Queue<DateTime> error)
@@ -25,13 +21,13 @@ public static class InstitutionCrawler
             {
                 Console.WriteLine($"   - Error!!!");
                 error.Enqueue(target);
-                error.SaveJson(FilePath.Path_Raw_Root, FilePath.Name_Error_Institution);
+                error.SaveJson(CrawlerPath.Path_Raw_Root, CrawlerPath.Name_Error_Institution);
                 Console.WriteLine($"   - Error Saved!");
                 Trace.WriteLine($"[Error]{target:yyyyMMdd}");
             }
             else
             {
-                content.SaveText(FilePath.Path_Raw_Institution, $"{target:yyyyMMdd}");
+                content.SaveText(CrawlerPath.Path_Raw_Institution, $"{target:yyyyMMdd}");
                 Console.WriteLine($"   - Data Saved!");
             }
         }
@@ -39,7 +35,7 @@ public static class InstitutionCrawler
         {
             Console.WriteLine($"   - Error!!!");
             error.Enqueue(target);
-            error.SaveJson(FilePath.Path_Raw_Root, FilePath.Name_Error_Institution);
+            error.SaveJson(CrawlerPath.Path_Raw_Root, CrawlerPath.Name_Error_Institution);
             Console.WriteLine($"   - Error Saved!");
             Trace.WriteLine($"[Error]{target:yyyyMMdd}");
         }
@@ -52,14 +48,14 @@ public static class InstitutionCrawler
         while (target.AddHours(17) < now)
         {
             CrawlDate(target, error);
-            target.SaveJson(FilePath.Path_Raw_Root,FilePath.Name_UpdateTimeName_Institution);
+            target.SaveJson(CrawlerPath.Path_Raw_Root,CrawlerPath.Name_UpdateTimeName_Institution);
 
             Thread.Sleep(2500);
             target = target.AddDays(1);
         }
         Console.WriteLine($"========== Error ==========");
         Console.WriteLine($"   - Error Count:{error.Count()}");
-        error.SaveJson(FilePath.Path_Raw_Root, FilePath.Name_Error_Institution);
+        error.SaveJson(CrawlerPath.Path_Raw_Root, CrawlerPath.Name_Error_Institution);
         Console.WriteLine($"   - Error Saved!");
     }
 
