@@ -45,7 +45,7 @@ public static class PriceCrawler
         DateTime target = begin ?? new(2004, 2, 13);
         DateTime now = end ?? DateTime.Now;
 
-        while (target.AddHours(14) < now)
+        while (target.AddHours(17) < now)
         {
             CrawlDate(target, error);
             target.SaveJson(CrawlerPath.Path_Raw_Root, CrawlerPath.Name_UpdateTime_Price);
